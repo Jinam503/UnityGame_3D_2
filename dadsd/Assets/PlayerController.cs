@@ -16,18 +16,18 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController characterController;
 
-    private float jumpPower;
-    private float gravity;
+    [SerializeField]private float jumpPower;
+    private float gravity = -9.81f;
+    [SerializeField] private float gravityMultiplier = 3.0f;
+    private float vel;
     private Vector3 moveDir;
 
-    private int canJumpCount;
+    private int numOfJumps;
+    [SerializeField] private int maxNumOfJumps = 2;
     // Start is called before the first frame update
     void Start()
     {
-        canJumpCount = 2;
-        gravity= -9.8f;
         moveDir = Vector3.zero;
-        jumpPower = 7.0f;
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>(); 
     }
@@ -35,32 +35,44 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(moveDir.y);
+        Debug.Log(IsCheckGrounded());
         CharacterRotation();
         CameraRotate();
         CharacterAnimation();
         Jump();
+        ApplyGravity();
         characterController.Move(moveDir * Time.deltaTime);
     }
-    private void Jump()
+    private void ApplyGravity()
     {
-        if (IsCheckGrounded()) canJumpCount = 2;
-        if (IsCheckGrounded() && Input.GetButtonDown("Jump"))
+        Debug.Log(vel);
+        if( IsCheckGrounded() && vel < 0.0f)
         {
-            canJumpCount--;
-            moveDir.y = jumpPower;
-
-        }
-        else if(!IsCheckGrounded() && Input.GetButtonDown("Jump") && canJumpCount == 1)
-        {
-            canJumpCount--;
-            moveDir.y = 10f;
+            vel = -1.0f;
         }
         else
         {
-            moveDir.y += gravity * Time.deltaTime;
+            vel += gravity * gravityMultiplier * Time.deltaTime;
+        }
+        moveDir.y = vel;
+    }
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
+            if (numOfJumps == 0) StartCoroutine(WaitForLanding());
+            numOfJumps++;
+            vel = jumpPower;
         }
 
+    }
+    private IEnumerator WaitForLanding()
+    {
+        yield return new WaitUntil(() => !IsCheckGrounded());
+        yield return new WaitUntil(IsCheckGrounded);
+
+        numOfJumps = 0;
     }
     private void CharacterAnimation()
     {
@@ -95,7 +107,7 @@ public class PlayerController : MonoBehaviour
         // 약간 신체에 박혀 있는 위치로부터 발사하지 않으면 제대로 판정할 수 없을 때가 있다.
         var ray = new Ray(this.transform.position + Vector3.up * 0.1f, Vector3.down);
         // 탐색 거리
-        var maxDistance = 1.5f;
+        var maxDistance = 0.2f;
         // 광선 디버그 용도
         Debug.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down * maxDistance, Color.red);
         // Raycast의 hit 여부로 판정
