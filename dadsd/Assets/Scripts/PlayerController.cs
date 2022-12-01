@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private float vel;
     private Vector3 moveDir;
 
+    private bool canAttack = true;
     //private int numOfJumps;
     //[SerializeField] private int maxNumOfJumps = 2;
     // Start is called before the first frame update
@@ -37,7 +38,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(IsCheckGrounded());
         CharacterRotation();
         CameraRotate();
         CharacterAnimation();
@@ -49,21 +49,14 @@ public class PlayerController : MonoBehaviour
     }
     private void SwordAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && anim.GetBool("Attack"))
+        if (Input.GetMouseButtonDown(0) && canAttack)
         {
-            anim.SetBool("Attack", false);
-            StartCoroutine(SwordAttack_C());
-
+            anim.SetTrigger("Attack");
+            canAttack = false;
         }
-    }
-    private IEnumerator SwordAttack_C()
-    {
-        yield return new WaitForSeconds(1f);
-        anim.SetBool("Attack", true);
     }
     private void ApplyGravity()
     {
-        Debug.Log(vel);
         if( IsCheckGrounded() && vel < 0.0f)
         {
             vel = -1.0f;
@@ -73,7 +66,7 @@ public class PlayerController : MonoBehaviour
             vel += gravity * gravityMultiplier * Time.deltaTime;
         }
         moveDir.y = vel;
-    }
+    }   
     private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -132,5 +125,9 @@ public class PlayerController : MonoBehaviour
         // Raycast의 hit 여부로 판정
         // 지상에만 충돌로 레이어를 지정
         return Physics.Raycast(ray, maxDistance, layerMask);
+    }
+    public void CanAttack()
+    {
+        canAttack = true;
     }
 }
