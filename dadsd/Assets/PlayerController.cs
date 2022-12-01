@@ -43,7 +43,23 @@ public class PlayerController : MonoBehaviour
         CharacterAnimation();
         Jump();
         ApplyGravity();
+        SwordAttack();
+        
         characterController.Move(moveDir * Time.deltaTime);
+    }
+    private void SwordAttack()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0) && anim.GetBool("Attack"))
+        {
+            anim.SetBool("Attack", false);
+            StartCoroutine(SwordAttack_C());
+
+        }
+    }
+    private IEnumerator SwordAttack_C()
+    {
+        yield return new WaitForSeconds(1f);
+        anim.SetBool("Attack", true);
     }
     private void ApplyGravity()
     {
