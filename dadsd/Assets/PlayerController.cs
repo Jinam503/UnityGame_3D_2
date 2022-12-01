@@ -22,11 +22,13 @@ public class PlayerController : MonoBehaviour
     private float vel;
     private Vector3 moveDir;
 
-    private int numOfJumps;
-    [SerializeField] private int maxNumOfJumps = 2;
+    //private int numOfJumps;
+    //[SerializeField] private int maxNumOfJumps = 2;
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         moveDir = Vector3.zero;
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>(); 
@@ -60,20 +62,21 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
-            if (numOfJumps == 0) StartCoroutine(WaitForLanding());
-            numOfJumps++;
+            if (!IsCheckGrounded()) return;
+            //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
+            //if (numOfJumps == 0) StartCoroutine(WaitForLanding());
+            //numOfJumps++;
             vel = jumpPower;
         }
 
     }
-    private IEnumerator WaitForLanding()
-    {
-        yield return new WaitUntil(() => !IsCheckGrounded());
-        yield return new WaitUntil(IsCheckGrounded);
-
-        numOfJumps = 0;
-    }
+    //private IEnumerator WaitForLanding()
+    //{
+    //    yield return new WaitUntil(() => !IsCheckGrounded());
+    //    yield return new WaitUntil(IsCheckGrounded);
+    //
+    //    //numOfJumps = 0;
+    //}
     private void CharacterAnimation()
     {
         float hor = Input.GetAxis("Horizontal");
