@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDir;
 
     private bool canAttack = true;
+    [SerializeField]private TrailRenderer trailEffect;
+    [SerializeField]private BoxCollider meleeArea;
     //private int numOfJumps;
     //[SerializeField] private int maxNumOfJumps = 2;
     // Start is called before the first frame update
@@ -53,7 +55,19 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetTrigger("Attack");
             canAttack = false;
+            StopCoroutine(Swing());
+            StartCoroutine(Swing());
         }
+    }
+    IEnumerator Swing()
+    {
+        yield return new WaitForSeconds(0.1f);
+        meleeArea.enabled = true;
+        trailEffect.enabled = true;
+        yield return new WaitForSeconds(0.3f);
+        meleeArea.enabled = true;
+        yield return new WaitForSeconds(0.05f);
+        trailEffect.enabled = false;    
     }
     private void ApplyGravity()
     {
