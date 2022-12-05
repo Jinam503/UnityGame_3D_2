@@ -24,4 +24,5 @@ public class PlayerData : MonoBehaviour
     private static PlayerData instance;
 
     public List<int> PlayerSkill = new List<int>();
+    public bool CanDamage = true;
 }

@@ -57,17 +57,25 @@ public class PlayerController : MonoBehaviour
             canAttack = false;
             StopCoroutine(Swing());
             StartCoroutine(Swing());
+            PlayerData.Instance.CanDamage = false;
         }
     }
     IEnumerator Swing()
     {
-        yield return new WaitForSeconds(0.1f);
-        meleeArea.enabled = true;
-        trailEffect.enabled = true;
-        yield return new WaitForSeconds(0.3f);
-        meleeArea.enabled = true;
-        yield return new WaitForSeconds(0.05f);
-        trailEffect.enabled = false;    
+        if (PlayerData.Instance.CanDamage)
+        {
+            Debug.Log("isSwinging");
+            Debug.Log(canAttack);
+            yield return new WaitForSeconds(0.1f);
+            meleeArea.enabled = true;
+            trailEffect.enabled = true;
+            yield return new WaitForSeconds(0.3f);
+            meleeArea.enabled = false;
+            yield return new WaitForSeconds(0.05f);
+            trailEffect.enabled = false;
+            canAttack = true;
+            PlayerData.Instance.CanDamage = true;
+        }
     }
     private void ApplyGravity()
     {
@@ -131,9 +139,5 @@ public class PlayerController : MonoBehaviour
         var maxDistance = 0.2f;
         Debug.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down * maxDistance, Color.red);
         return Physics.Raycast(ray, maxDistance, layerMask);
-    }
-    public void CanAttack()
-    {
-        canAttack = true;
     }
 }
