@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     private float vel;
     private Vector3 moveDir;
 
-    private bool canAttack = true;
     [SerializeField]private TrailRenderer trailEffect;
     [SerializeField]private BoxCollider meleeArea;
     //private int numOfJumps;
@@ -51,11 +50,8 @@ public class PlayerController : MonoBehaviour
     }
     private void SwordAttack()
     {
-        if (Input.GetMouseButtonDown(0) && canAttack)
+        if (Input.GetMouseButtonDown(0) && PlayerData.Instance.CanDamage)
         {
-            anim.SetTrigger("Attack");
-            canAttack = false;
-            StopCoroutine(Swing());
             StartCoroutine(Swing());
             PlayerData.Instance.CanDamage = false;
         }
@@ -64,8 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerData.Instance.CanDamage)
         {
-            Debug.Log("isSwinging");
-            Debug.Log(canAttack);
+            anim.SetTrigger("Attack");
             yield return new WaitForSeconds(0.1f);
             meleeArea.enabled = true;
             trailEffect.enabled = true;
@@ -73,7 +68,6 @@ public class PlayerController : MonoBehaviour
             meleeArea.enabled = false;
             yield return new WaitForSeconds(0.05f);
             trailEffect.enabled = false;
-            canAttack = true;
             PlayerData.Instance.CanDamage = true;
         }
     }

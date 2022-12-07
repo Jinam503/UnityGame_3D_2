@@ -37,14 +37,14 @@ public class Bot : MonoBehaviour
         if (collision.gameObject.tag == "Sword")
         {
             Debug.Log(CurHp);
-            CurHp -= collision.gameObject.GetComponent<Sword>().damage;
+            CurHp -= PlayerData.Instance.MeleeDamage;
             hpbarImage.fillAmount = CurHp / MaxHp;
             if(CurHp <= 0)
             {
                 CurHp = 100F;
             }
         }
-        StartCoroutine(ShowDamage(collision.gameObject.GetComponent<Sword>().damage));
+        StartCoroutine(ShowDamage(PlayerData.Instance.MeleeDamage));
     }
     IEnumerator ShowDamage(int damage)
     {

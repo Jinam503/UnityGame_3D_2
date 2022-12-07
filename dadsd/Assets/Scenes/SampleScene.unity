@@ -3378,6 +3378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerSkill: 00000000
+  MeleeDamage: 10
   CanDamage: 1
 --- !u!23 &3438619257033669404
 MeshRenderer:
@@ -3476,7 +3477,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.9, z: 0.07581501}
+  m_Size: {x: 0.5, y: 2, z: 0.2}
   m_Center: {x: -0.0011338528, y: 0.4, z: 0.00018217742}
 --- !u!114 &3438619257035662814
 MonoBehaviour:
