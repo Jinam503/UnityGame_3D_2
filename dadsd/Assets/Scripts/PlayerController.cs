@@ -65,10 +65,11 @@ public class PlayerController : MonoBehaviour
             meleeArea.enabled = true;
             trailEffect.enabled = true;
             yield return new WaitForSeconds(0.3f);
-            meleeArea.enabled = false;
+            
             yield return new WaitForSeconds(0.05f);
+            meleeArea.enabled = false;
             trailEffect.enabled = false;
-            PlayerData.Instance.CanDamage = true;
+            
         }
     }
     private void ApplyGravity()
@@ -133,5 +134,9 @@ public class PlayerController : MonoBehaviour
         var maxDistance = 0.2f;
         Debug.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down * maxDistance, Color.red);
         return Physics.Raycast(ray, maxDistance, layerMask);
+    }
+    public void FinSwing()
+    {
+        PlayerData.Instance.CanDamage = true;
     }
 }

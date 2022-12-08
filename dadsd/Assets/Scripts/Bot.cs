@@ -34,7 +34,8 @@ public class Bot : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Sword")
+        Debug.Log(collision.gameObject);
+        if (collision.gameObject.tag == "Sword" && !PlayerData.Instance.CanDamage)
         {
             Debug.Log(CurHp);
             CurHp -= PlayerData.Instance.MeleeDamage;
@@ -43,8 +44,9 @@ public class Bot : MonoBehaviour
             {
                 CurHp = 100F;
             }
+            StartCoroutine(ShowDamage(PlayerData.Instance.MeleeDamage));
         }
-        StartCoroutine(ShowDamage(PlayerData.Instance.MeleeDamage));
+        
     }
     IEnumerator ShowDamage(int damage)
     {
