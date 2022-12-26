@@ -22,11 +22,11 @@ public class PlayerController : MonoBehaviour
     private float vel;
     private Vector3 moveDir;
 
-    [SerializeField]private TrailRenderer trailEffect;
-    [SerializeField]private BoxCollider meleeArea;
+    Weapon equipWeapon; // yet
     //private int numOfJumps;
     //[SerializeField] private int maxNumOfJumps = 2;
-    // Start is called before the first frame update
+    float swingDelay;
+    bool isSwingReady;
 
     float hor;
     float ver;
@@ -68,24 +68,7 @@ public class PlayerController : MonoBehaviour
     {
         if (attack_k && PlayerData.Instance.CanDamage)
         {
-            StartCoroutine(Swing());
             PlayerData.Instance.CanDamage = false;
-        }
-    }
-    IEnumerator Swing()
-    {
-        if (PlayerData.Instance.CanDamage)
-        {
-            anim.SetTrigger("Attack");
-            yield return new WaitForSeconds(0.1f);
-            meleeArea.enabled = true;
-            trailEffect.enabled = true;
-            yield return new WaitForSeconds(0.3f);
-            
-            yield return new WaitForSeconds(0.05f);
-            meleeArea.enabled = false;
-            trailEffect.enabled = false;
-            
         }
     }
     private void ApplyGravity()
