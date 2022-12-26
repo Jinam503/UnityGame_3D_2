@@ -27,6 +27,13 @@ public class PlayerController : MonoBehaviour
     //private int numOfJumps;
     //[SerializeField] private int maxNumOfJumps = 2;
     // Start is called before the first frame update
+
+    float hor;
+    float ver;
+
+    bool jump_k;
+    bool attack_k;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -39,18 +46,27 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetInput();
         CharacterRotation();
         CameraRotate();
         CharacterAnimation();
         Jump();
         ApplyGravity();
-        SwordAttack();
+        Attack();
         
         characterController.Move(moveDir * Time.deltaTime);
     }
-    private void SwordAttack()
+    void GetInput()
     {
-        if (Input.GetMouseButtonDown(0) && PlayerData.Instance.CanDamage)
+        hor = Input.GetAxis("Horizontal");
+        ver = Input.GetAxis("Vertical");
+
+        jump_k = Input.GetButtonDown("Jump");
+        attack_k = Input.GetButtonDown("Fire1");
+    }
+    private void Attack()
+    {
+        if (attack_k && PlayerData.Instance.CanDamage)
         {
             StartCoroutine(Swing());
             PlayerData.Instance.CanDamage = false;
@@ -86,7 +102,7 @@ public class PlayerController : MonoBehaviour
     }   
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (jump_k)
         {
             if (!IsCheckGrounded()) return;
             //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
@@ -105,9 +121,6 @@ public class PlayerController : MonoBehaviour
     //}
     private void CharacterAnimation()
     {
-        float hor = Input.GetAxis("Horizontal");
-        float ver = Input.GetAxis("Vertical");
-
         anim.SetFloat("Ver", ver);
         anim.SetFloat("Hor", hor);
     }
