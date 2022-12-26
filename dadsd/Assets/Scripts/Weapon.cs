@@ -10,12 +10,25 @@ public class Weapon : MonoBehaviour
     public float rate; //attack speed
     public BoxCollider meleeArea;
     public TrailRenderer trailEffect;
-    void Start()
+    
+    public void Use()
     {
-        
+        if(type == Type.Sword)
+        {
+            StopCoroutine(Swing());
+            StartCoroutine(Swing());
+        }
     }
-    void Update()
+    IEnumerator Swing()
     {
-        
+        yield return new WaitForSeconds(0.1f);
+        meleeArea.enabled = true;
+        trailEffect.enabled = true;
+        yield return new WaitForSeconds(0.3f);
+
+        yield return new WaitForSeconds(0.05f);
+        meleeArea.enabled = false;
+        trailEffect.enabled = false;
+
     }
 }

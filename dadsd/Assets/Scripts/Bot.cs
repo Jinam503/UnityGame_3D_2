@@ -5,18 +5,27 @@ using UnityEngine.UI;
 
 public class Bot : MonoBehaviour
 {
-    public float CurHp = 100f;
-    private float MaxHp = 100f;
+    public float CurHp;
+    public float MaxHp;
+
+    Rigidbody rigid;
+    BoxCollider boxCollider;
+
+
+    //체력바 띄우기
     public Canvas uiCanvas;
     private Image hpbarImage;
-
     public GameObject hpBarPrefab;
     public Vector3 hpBarOffset = new Vector3(0, 1.0f, 0);
     public Vector3 DamageNumOffset;
     public GameObject damageImage;
+    private void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        boxCollider = GetComponent<BoxCollider>();
+    }
     private void Start()
     {
-        CurHp = 100;
         SetHpBar();
     }
     private void Update()
@@ -32,22 +41,16 @@ public class Bot : MonoBehaviour
         _hpbar.target = gameObject.transform;
         _hpbar.offset = hpBarOffset;
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(collision.gameObject);
-        if (collision.gameObject.tag == "Sword" && !PlayerData.Instance.CanDamage)
+        if(other.tag == "Sword")
         {
-            Debug.Log(CurHp);
-            CurHp -= PlayerData.Instance.MeleeDamage;
-            hpbarImage.fillAmount = CurHp / MaxHp;
-            if(CurHp <= 0)
-            {
-                CurHp = 100F;
-            }
-            StartCoroutine(ShowDamage(PlayerData.Instance.MeleeDamage));
+            Weapon weapon = other.GetComponent<Weapon>();
+            CurHp -= weapon.damage;
+            StartCoroutine(ShowDamage(weapon.damage));
         }
-        
     }
+    
     IEnumerator ShowDamage(int damage)
     {
         GameObject damageNum = Instantiate(damageImage, uiCanvas.transform);

@@ -22,10 +22,12 @@ public class PlayerController : MonoBehaviour
     private float vel;
     private Vector3 moveDir;
 
-    Weapon equipWeapon; // yet
     //private int numOfJumps;
     //[SerializeField] private int maxNumOfJumps = 2;
-    float swingDelay;
+
+    public Weapon equipWeapon;
+
+    float swingDelay = 0f;
     bool isSwingReady;
 
     float hor;
@@ -43,7 +45,6 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>(); 
     }
 
-    // Update is called once per frame
     void Update()
     {
         GetInput();
@@ -59,16 +60,24 @@ public class PlayerController : MonoBehaviour
     void GetInput()
     {
         hor = Input.GetAxis("Horizontal");
-        ver = Input.GetAxis("Vertical");
+        ver = Input.GetAxis("Vertical"); 
 
         jump_k = Input.GetButtonDown("Jump");
         attack_k = Input.GetButtonDown("Fire1");
     }
-    private void Attack()
+    void Attack()
     {
-        if (attack_k && PlayerData.Instance.CanDamage)
+        if (equipWeapon == null) return;
+
+        swingDelay += Time.deltaTime;
+        isSwingReady = equipWeapon.rate < swingDelay;
+
+        if (attack_k && isSwingReady)
         {
-            PlayerData.Instance.CanDamage = false;
+            Debug.Log(attack_k);
+            anim.SetTrigger("Attack");
+            equipWeapon.Use();
+            swingDelay = 0;
         }
     }
     private void ApplyGravity()
@@ -90,7 +99,7 @@ public class PlayerController : MonoBehaviour
             if (!IsCheckGrounded()) return;
             //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
             //if (numOfJumps == 0) StartCoroutine(WaitForLanding());
-            //numOfJumps++;
+            //numOfJumps++;       doubleJump
             vel = jumpPower;
         }
 
@@ -130,9 +139,5 @@ public class PlayerController : MonoBehaviour
         var maxDistance = 0.2f;
         Debug.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down * maxDistance, Color.red);
         return Physics.Raycast(ray, maxDistance, layerMask);
-    }
-    public void FinSwing()
-    {
-        PlayerData.Instance.CanDamage = true;
     }
 }
