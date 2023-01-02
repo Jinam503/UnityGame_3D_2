@@ -97,6 +97,7 @@ public class PlayerController : MonoBehaviour
         if (jump_k)
         {
             if (!IsCheckGrounded()) return;
+            anim.SetTrigger("Jump");
             //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
             //if (numOfJumps == 0) StartCoroutine(WaitForLanding());
             //numOfJumps++;       doubleJump
