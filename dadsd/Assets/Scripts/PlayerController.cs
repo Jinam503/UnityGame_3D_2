@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     bool jump_k;
     bool attack_k;
 
+    bool isJump;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -64,6 +66,8 @@ public class PlayerController : MonoBehaviour
 
         jump_k = Input.GetButtonDown("Jump");
         attack_k = Input.GetButtonDown("Fire1");
+
+        isJump = !IsCheckGrounded();
     }
     void Attack()
     {
@@ -94,9 +98,8 @@ public class PlayerController : MonoBehaviour
     }   
     private void Jump()
     {
-        if (jump_k)
+        if (jump_k && isJump)
         {
-            if (!IsCheckGrounded()) return;
             anim.SetTrigger("Jump");
             //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
             //if (numOfJumps == 0) StartCoroutine(WaitForLanding());
