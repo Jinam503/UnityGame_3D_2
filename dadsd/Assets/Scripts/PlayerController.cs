@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
     }   
     private void Jump()
     {
-        if (jump_k && isJump)
+        if (jump_k && !isJump)
         {
             anim.SetTrigger("Jump");
             //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
