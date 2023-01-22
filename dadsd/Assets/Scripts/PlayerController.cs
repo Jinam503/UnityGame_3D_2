@@ -22,9 +22,6 @@ public class PlayerController : MonoBehaviour
     private float vel;
     private Vector3 moveDir;
 
-    //private int numOfJumps;
-    //[SerializeField] private int maxNumOfJumps = 2;
-
     public Weapon equipWeapon;
 
     float swingDelay = 0f;
@@ -101,20 +98,10 @@ public class PlayerController : MonoBehaviour
         if (jump_k && !isJump)
         {
             anim.SetTrigger("Jump");
-            //if (!IsCheckGrounded() && numOfJumps >= maxNumOfJumps) return;
-            //if (numOfJumps == 0) StartCoroutine(WaitForLanding());
-            //numOfJumps++;       doubleJump
             vel = jumpPower;
         }
 
     }
-    //private IEnumerator WaitForLanding()
-    //{
-    //    yield return new WaitUntil(() => !IsCheckGrounded());
-    //    yield return new WaitUntil(IsCheckGrounded);
-    //
-    //    //numOfJumps = 0;
-    //}
     private void CharacterAnimation()
     {
         anim.SetFloat("Ver", ver);
